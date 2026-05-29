@@ -1,0 +1,698 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SGBIT Campus Portal - Unified Cloud ERP</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Glowing Aesthetic Aurora Blobs -->
+  <div class="bg-blob blob-1"></div>
+  <div class="bg-blob blob-2"></div>
+  <div class="bg-blob blob-3"></div>
+
+  <!-- ============================================== -->
+  <!-- AUTHENTICATION VIEW                            -->
+  <!-- ============================================== -->
+  <div class="auth-wrapper" id="auth-screen">
+    <div class="auth-card glass">
+      <div class="auth-header">
+        <div class="logo-icon">SG</div>
+        <h2>SGBIT Attendance</h2>
+        <p>Enter your credentials to enter the campus portal</p>
+      </div>
+
+      <!-- Auth Selection Tabs -->
+      <div class="auth-tabs">
+        <button class="auth-tab active" id="tab-login">Login</button>
+        <button class="auth-tab" id="tab-register">Register</button>
+      </div>
+
+      <!-- ==================== LOGIN FORM ==================== -->
+      <div class="auth-form-container active" id="form-login-container">
+        <!-- Login Method Sub-Tabs -->
+        <div class="login-sub-tabs">
+          <button class="sub-tab active" id="sub-tab-password">Password Login</button>
+          <button class="sub-tab" id="sub-tab-otp">OTP Login</button>
+        </div>
+
+        <!-- 1. Password Login Mode -->
+        <form id="form-login-password" class="login-sub-form active">
+          <div class="form-group">
+            <label class="form-label">University Seat Number (USN) / ID</label>
+            <input type="text" class="form-control" id="login-usn" placeholder="e.g. 2GB20CS001" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Password</label>
+            <input type="password" class="form-control" id="login-password" placeholder="••••••••" required>
+          </div>
+          <button type="submit" class="btn btn-primary btn-block">Log In with Password</button>
+          <div style="display:flex; justify-content:flex-end; margin-top:0.5rem;">
+            <a href="#" id="btn-forgot-password-link" style="font-size:0.75rem; color:var(--primary); text-decoration:none;">Forgot Password? Reset with OTP</a>
+          </div>
+        </form>
+
+        <!-- 2. OTP Login Mode -->
+        <form id="form-login-otp" class="login-sub-form">
+          <div class="form-group">
+            <label class="form-label">USN / Email Address</label>
+            <div style="display: flex; gap: 0.5rem;">
+              <input type="text" class="form-control" id="login-otp-usn" placeholder="e.g. prajwal@sgbit.edu.in" style="flex-grow: 1;">
+              <button type="button" class="btn btn-secondary btn-sm" id="btn-send-otp" style="white-space: nowrap;">Send OTP</button>
+            </div>
+            <span class="form-help-text" id="otp-status-lbl">Click 'Send OTP' to request a 6-digit access code.</span>
+          </div>
+          <div class="form-group" id="otp-input-group" style="display: none;">
+            <label class="form-label">Enter 6-Digit OTP</label>
+            <input type="text" class="form-control" id="login-otp-code" placeholder="123456" maxlength="6">
+          </div>
+          <button type="submit" class="btn btn-primary btn-block" id="btn-submit-otp" disabled>Log In with OTP</button>
+        </form>
+      </div>
+
+      <!-- ==================== REGISTER FORM ==================== -->
+      <form id="form-register" class="auth-form-container">
+        <div class="form-group">
+          <label class="form-label">Full Name</label>
+          <input type="text" class="form-control" id="reg-name" placeholder="Prajwal K" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Email Address</label>
+          <input type="email" class="form-control" id="reg-email" placeholder="prajwal@sgbit.edu.in" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">University Seat Number (USN) / ID</label>
+          <input type="text" class="form-control" id="reg-usn" placeholder="e.g. 2GB20CS001" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Password</label>
+          <input type="password" class="form-control" id="reg-password" placeholder="Create secure password" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Select Campus Role</label>
+          <select class="bunk-select-subject" id="reg-role" required>
+            <option value="student">Student Tracker</option>
+            <option value="teacher">Department Faculty (Teacher)</option>
+            <option value="admin">System Administrator (Admin)</option>
+          </select>
+        </div>
+        <button type="submit" class="btn btn-primary btn-block">Create Account</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- ============================================== -->
+  <!-- MAIN SYSTEM VIEW                               -->
+  <!-- ============================================== -->
+  <div class="app-container" id="app-screen" style="display: none;">
+    
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar glass">
+      <div>
+        <div class="logo-container">
+          <div class="logo-icon">SG</div>
+          <div>
+            <span class="logo-text">SGBIT</span>
+            <span class="logo-sub">ERP Portal</span>
+          </div>
+        </div>
+        
+        <nav>
+          <ul class="menu-list">
+            <li class="menu-item">
+              <a class="menu-link active" id="nav-dashboard">
+                <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/></svg>
+                <span>Dashboard</span>
+              </a>
+            </li>
+            <li class="menu-item" id="nav-subjects-item">
+              <a class="menu-link" id="nav-subjects">
+                <svg viewBox="0 0 24 24"><path d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
+                <span id="nav-subjects-label">My Subjects</span>
+              </a>
+            </li>
+          </ul>
+        </nav>
+      </div>
+      
+      <div class="sidebar-footer">
+        <button class="theme-toggle-btn" id="theme-toggle" style="margin-bottom: 0.5rem;">
+          <svg id="theme-sun-icon" viewBox="0 0 24 24" style="display:none;"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+          <svg id="theme-moon-icon" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
+          <span id="theme-text">Light Mode</span>
+        </button>
+        
+        <button class="theme-toggle-btn" id="btn-logout" style="border-color: var(--danger-glow); color: var(--danger);">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 01-2-2h4M16 17l5-5-5-5M21 12H9"/></svg>
+          <span>Log Out</span>
+        </button>
+      </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="main-content">
+      
+      <!-- Top Header -->
+      <header class="main-header">
+        <div class="header-meta">
+          <h1 id="header-title">Student Dashboard</h1>
+          <p id="header-subtitle">Welcome back! Fetching live database records...</p>
+        </div>
+        
+        <div class="user-profile-badge">
+          <span class="user-avatar" id="avatar-letters">PK</span>
+          <div style="display:flex; flex-direction:column;">
+            <span class="profile-name" id="user-profile-name">Prajwal K</span>
+            <span class="profile-role" id="user-profile-usn">USN: 2GB20CS001</span>
+          </div>
+        </div>
+      </header>
+
+      <!-- ============================================== -->
+      <!-- STUDENT MODE PANEL                             -->
+      <!-- ============================================== -->
+      <section class="content-panel" id="panel-student">
+        
+        <!-- Stats Cards Grid -->
+        <div class="stats-grid">
+          <div class="stat-card glass" style="--card-accent: var(--primary); --card-glow: var(--primary-glow);">
+            <div class="stat-info">
+              <span class="stat-label">Overall Attendance</span>
+              <span class="stat-value" id="student-total-percentage">0%</span>
+              <span class="stat-desc" id="student-total-ratio">0/0 Classes</span>
+            </div>
+            <div class="stat-icon-wrapper">
+              <svg viewBox="0 0 24 24"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
+            </div>
+          </div>
+
+          <div class="stat-card glass" style="--card-accent: var(--success); --card-glow: var(--success-glow);">
+            <div class="stat-info">
+              <span class="stat-label">Classes Attended</span>
+              <span class="stat-value" id="student-total-attended">0</span>
+              <span class="stat-desc">Includes excused medical leave</span>
+            </div>
+            <div class="stat-icon-wrapper">
+              <svg viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><path d="M22 4L12 14.01l-3-3"/></svg>
+            </div>
+          </div>
+
+          <div class="stat-card glass" style="--card-accent: var(--danger); --card-glow: var(--danger-glow);">
+            <div class="stat-info">
+              <span class="stat-label">Classes Absent</span>
+              <span class="stat-value" id="student-total-absent">0</span>
+              <span class="stat-desc">Unexcused misses</span>
+            </div>
+            <div class="stat-icon-wrapper">
+              <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M15 9l-6 6M9 9l6 6"/></svg>
+            </div>
+          </div>
+        </div>
+
+        <!-- Dashboard Grid Layout -->
+        <div class="dashboard-layout">
+          
+          <!-- Left Column (Subjects Tracker) -->
+          <div style="display: flex; flex-direction: column; gap: 2rem;">
+            
+            <div class="section-card glass">
+              <div class="section-header">
+                <h2>Subject Wise Tracking</h2>
+              </div>
+              <!-- Subject Cards Grid -->
+              <div class="subject-grid" id="subjects-container">
+                <!-- Dynamically Inserted -->
+              </div>
+            </div>
+
+            <!-- Custom Bunk Skip Calculator -->
+            <div class="section-card glass">
+              <div class="section-header">
+                <h2>Interactive Bunk Simulator & Skip Planner</h2>
+              </div>
+              <div class="bunk-calculator-container">
+                <p class="stat-desc" style="margin-bottom: 0.5rem;">Select a subject below and use the skip simulator slider to plan and forecast your future attendance safety.</p>
+                <div style="display: flex; gap: 1rem; align-items: center;">
+                  <select class="bunk-select-subject" id="bunk-subject-selector">
+                    <option value="">Choose a subject...</option>
+                  </select>
+                </div>
+                
+                <!-- Skipped Classes Slider Simulator -->
+                <div id="bunk-slider-group" style="display: none; flex-direction: column; gap: 0.75rem; margin-top: 1rem; padding: 1rem; border-radius: var(--radius-md); background: var(--bg-tertiary); border: 1px solid var(--glass-border);">
+                  <div style="display:flex; justify-content:space-between; font-size:0.85rem; font-weight:600;">
+                    <span>Skip how many upcoming sessions?</span>
+                    <span id="bunk-slider-value" style="color:var(--primary); font-weight:800;">0 Classes</span>
+                  </div>
+                  <input type="range" id="bunk-slider" min="0" max="10" value="0" style="width:100%; accent-color:var(--primary); cursor:pointer;">
+                  
+                  <div style="display:flex; justify-content:space-between; font-size:0.8rem; border-top:1px dashed var(--glass-border); padding-top:0.75rem; margin-top:0.25rem; color:var(--text-secondary);">
+                    <span>Current Rate: <b id="bunk-current-percent">0%</b></span>
+                    <span>Simulated Rate: <b id="bunk-simulated-percent">0%</b></span>
+                  </div>
+                </div>
+                
+                <div class="bunk-indicator-card glass" id="bunk-analysis-card" style="display: none; margin-top: 1rem;">
+                  <span class="bunk-status-title" id="bunk-status-text">Safe to Bunk</span>
+                  <span class="bunk-status-action" id="bunk-action-text">You can bunk 2 more classes consecutively while staying above 75%.</span>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Right Column (Calendar Log & Recent logs list) -->
+          <div style="display: flex; flex-direction: column; gap: 2rem;">
+            
+            <!-- Quick Calendar Tracker -->
+            <div class="section-card glass">
+              <div class="section-header">
+                <h2>Attendance Logs Calendar</h2>
+              </div>
+              <div class="calendar-widget" id="calendar-widget-container">
+                <!-- Dynamic Interactive Calendar -->
+              </div>
+            </div>
+
+            <!-- Detailed Logs -->
+            <div class="section-card glass">
+              <div class="section-header">
+                <h2>Recent Attendance Logs</h2>
+                <button class="btn btn-secondary btn-sm" id="btn-clear-logs">Reset Logs</button>
+              </div>
+              <div class="logs-list" id="recent-logs-container">
+                <!-- Dynamic Logs -->
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================================== -->
+      <!-- TEACHER MODE PANEL                             -->
+      <!-- ============================================== -->
+      <section class="content-panel" id="panel-teacher">
+        
+        <!-- Stats Cards Grid -->
+        <div class="stats-grid">
+          <div class="stat-card glass" style="--card-accent: var(--primary); --card-glow: var(--primary-glow);">
+            <div class="stat-info">
+              <span class="stat-label">Average Attendance</span>
+              <span class="stat-value" id="teacher-avg-percentage">0%</span>
+              <span class="stat-desc" id="teacher-total-students-label">0 Students Active</span>
+            </div>
+            <div class="stat-icon-wrapper">
+              <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
+            </div>
+          </div>
+
+          <div class="stat-card glass" style="--card-accent: var(--success); --card-glow: var(--success-glow);">
+            <div class="stat-info">
+              <span class="stat-label">On Target (>75%)</span>
+              <span class="stat-value" id="teacher-on-target">0</span>
+              <span class="stat-desc">Students in safe zone</span>
+            </div>
+            <div class="stat-icon-wrapper">
+              <svg viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><path d="M22 4L12 14.01l-3-3"/></svg>
+            </div>
+          </div>
+
+          <div class="stat-card glass" style="--card-accent: var(--danger); --card-glow: var(--danger-glow);">
+            <div class="stat-info">
+              <span class="stat-label">Below Goal (&lt;75%)</span>
+              <span class="stat-value" id="teacher-low-attendance">0</span>
+              <span class="stat-desc">Needs critical attention</span>
+            </div>
+            <div class="stat-icon-wrapper">
+              <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
+            </div>
+          </div>
+        </div>
+
+        <!-- Roster Panel -->
+        <div class="section-card glass">
+          <div class="section-header">
+            <div>
+              <h2>Class Student Roster</h2>
+              <p class="stat-desc" style="margin-top: 0.25rem;">Perform roll calls. Import raw rosters from spreadsheets or download live attendance reports.</p>
+            </div>
+            <div class="section-header-actions">
+              <select class="bunk-select-subject" id="teacher-subject-selector" style="width: 180px; padding: 0.5rem;"></select>
+              
+              <!-- Real Data Spreadsheet triggers -->
+              <button class="btn btn-secondary btn-sm" id="btn-import-roster-csv">
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
+                <span>Import CSV</span>
+              </button>
+              <button class="btn btn-secondary btn-sm" id="btn-export-attendance">
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg>
+                <span>Export CSV</span>
+              </button>
+              <button class="btn btn-primary btn-sm" id="btn-add-student-modal">Add Student</button>
+            </div>
+          </div>
+
+          <!-- Roster Table -->
+          <div class="roster-table-container">
+            <table class="roster-table" id="roster-table-body">
+              <thead>
+                <tr>
+                  <th>Student Name</th>
+                  <th>Roll Number / USN</th>
+                  <th>Attendance Rate</th>
+                  <th>Log Today's Roll Call</th>
+                </tr>
+              </thead>
+              <tbody>
+                <!-- Dynamic student entries -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================================== -->
+      <!-- MASTER ADMIN MODE PANEL                        -->
+      <!-- ============================================== -->
+      <section class="content-panel" id="panel-admin">
+        <!-- Global Campus metrics -->
+        <div class="stats-grid">
+          <div class="stat-card glass" style="--card-accent: var(--primary); --card-glow: var(--primary-glow);">
+            <div class="stat-info">
+              <span class="stat-label">Faculty Registered</span>
+              <span class="stat-value" id="admin-total-teachers">0</span>
+              <span class="stat-desc">Active SGBIT Lecturers</span>
+            </div>
+            <div class="stat-icon-wrapper">
+              <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+            </div>
+          </div>
+
+          <div class="stat-card glass" style="--card-accent: var(--success); --card-glow: var(--success-glow);">
+            <div class="stat-info">
+              <span class="stat-label">Enrolled Students</span>
+              <span class="stat-value" id="admin-total-students">0</span>
+              <span class="stat-desc">SQLite Relational Registry</span>
+            </div>
+            <div class="stat-icon-wrapper">
+              <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
+            </div>
+          </div>
+
+          <div class="stat-card glass" style="--card-accent: var(--info); --card-glow: var(--info-glow);">
+            <div class="stat-info">
+              <span class="stat-label">Course Subjects</span>
+              <span class="stat-value" id="admin-total-subjects">0</span>
+              <span class="stat-desc">Curriculum Catalog</span>
+            </div>
+            <div class="stat-icon-wrapper">
+              <svg viewBox="0 0 24 24"><path d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253"/></svg>
+            </div>
+          </div>
+        </div>
+
+        <div class="dashboard-layout">
+          <!-- Left Column (Subjects CRUD) -->
+          <div class="section-card glass">
+            <div class="section-header">
+              <h2>SGBIT Curriculum Subjects</h2>
+              <button class="btn btn-primary btn-sm" id="btn-admin-add-subject">Add Course</button>
+            </div>
+            
+            <div class="roster-table-container">
+              <table class="roster-table" id="admin-subjects-table">
+                <thead>
+                  <tr>
+                    <th>Subject</th>
+                    <th>Code</th>
+                    <th>Teacher Assigned</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <!-- Dynamic admin subjects -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Right Column (Users Roster control) -->
+          <div class="section-card glass">
+            <div class="section-header">
+              <h2>Faculty Management</h2>
+              <button class="btn btn-secondary btn-sm" id="btn-admin-add-faculty">Add Teacher</button>
+            </div>
+            
+            <div class="roster-table-container">
+              <table class="roster-table" id="admin-faculty-table">
+                <thead>
+                  <tr>
+                    <th>Faculty Name</th>
+                    <th>ID / Code</th>
+                    <th>Remove</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <!-- Dynamic admin faculty list -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- ============================================== -->
+  <!-- ADD SUBJECT MODAL                              -->
+  <!-- ============================================== -->
+  <div class="modal-overlay" id="modal-add-subject">
+    <div class="modal-container glass">
+      <div class="modal-header">
+        <h3>Add New Subject</h3>
+        <button class="modal-close" id="btn-close-subject-modal">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+        </button>
+      </div>
+      <form id="form-add-subject">
+        <div class="form-group">
+          <label class="form-label">Subject Name</label>
+          <input type="text" class="form-control" id="subject-name-input" placeholder="e.g. Computer Networks" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Subject Code</label>
+          <input type="text" class="form-control" id="subject-code-input" placeholder="e.g. CS-601" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Target Attendance (%)</label>
+          <input type="number" class="form-control" id="subject-target-input" min="50" max="100" value="75" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Assign Teacher</label>
+          <select class="bunk-select-subject" id="subject-teacher-select" required>
+            <!-- Dynamically populated teachers list -->
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Accent Color Theme</label>
+          <div class="color-picker-grid" id="subject-color-picker">
+            <div class="color-option selected" style="background: hsl(245, 82%, 67%);" data-color="hsl(245, 82%, 67%)"></div>
+            <div class="color-option" style="background: hsl(142, 70%, 45%);" data-color="hsl(142, 70%, 45%)"></div>
+            <div class="color-option" style="background: hsl(38, 92%, 50%);" data-color="hsl(38, 92%, 50%)"></div>
+            <div class="color-option" style="background: hsl(350, 89%, 60%);" data-color="hsl(350, 89%, 60%)"></div>
+            <div class="color-option" style="background: hsl(188, 86%, 53%);" data-color="hsl(188, 86%, 53%)"></div>
+            <div class="color-option" style="background: hsl(300, 76%, 60%);" data-color="hsl(300, 76%, 60%)"></div>
+          </div>
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="btn btn-secondary" id="btn-cancel-subject">Cancel</button>
+          <button type="submit" class="btn btn-primary">Create Subject</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ============================================== -->
+  <!-- RECORD ATTENDANCE MODAL                        -->
+  <!-- ============================================== -->
+  <div class="modal-overlay" id="modal-log-attendance">
+    <div class="modal-container glass">
+      <div class="modal-header">
+        <h3>Log Subject Attendance</h3>
+        <button class="modal-close" id="btn-close-log-modal">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+        </button>
+      </div>
+      <form id="form-log-attendance" enctype="multipart/form-data">
+        <input type="hidden" id="log-subject-id">
+        <div class="form-group">
+          <label class="form-label">Subject</label>
+          <input type="text" class="form-control" id="log-subject-name" readonly>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Date</label>
+          <input type="date" class="form-control" id="log-date-picker" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Attendance Status</label>
+          <select class="bunk-select-subject" id="log-status-select" required>
+            <option value="present">Present</option>
+            <option value="absent">Absent</option>
+            <option value="medical">Excused Medical Leave</option>
+            <option value="holiday">Holiday</option>
+            <option value="cancelled">Class Cancelled</option>
+          </select>
+        </div>
+        <!-- Medical Upload Field -->
+        <div class="form-group" id="medical-upload-group" style="display: none;">
+          <label class="form-label">Attach Medical Certificate</label>
+          <div class="file-upload-input">
+            <input type="file" id="medical-file-input" name="medical_certificate" accept="image/*,application/pdf">
+          </div>
+          <span class="form-help-text">Attach image/PDF of medical certificate to validate attendance credit.</span>
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="btn btn-secondary" id="btn-cancel-log">Cancel</button>
+          <button type="submit" class="btn btn-primary">Save Log Entry</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ============================================== -->
+  <!-- REGISTER FACULTY MODAL (Admin Portal)          -->
+  <!-- ============================================== -->
+  <div class="modal-overlay" id="modal-admin-add-faculty">
+    <div class="modal-container glass">
+      <div class="modal-header">
+        <h3>Add SGBIT Faculty Member</h3>
+        <button class="modal-close" id="btn-close-admin-faculty">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+        </button>
+      </div>
+      <form id="form-admin-add-faculty">
+        <div class="form-group">
+          <label class="form-label">Full Name</label>
+          <input type="text" class="form-control" id="faculty-name-input" placeholder="e.g. Prof. Patil" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Faculty ID Code</label>
+          <input type="text" class="form-control" id="faculty-code-input" placeholder="e.g. SGBIT-TEA-02" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Official Email</label>
+          <input type="email" class="form-control" id="faculty-email-input" placeholder="patil@sgbit.edu.in" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Initial Password</label>
+          <input type="password" class="form-control" id="faculty-password-input" value="password123" required>
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="btn btn-secondary" id="btn-cancel-admin-faculty">Cancel</button>
+          <button type="submit" class="btn btn-primary">Add Faculty Member</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ============================================== -->
+  <!-- ADD STUDENT MODAL                              -->
+  <!-- ============================================== -->
+  <div class="modal-overlay" id="modal-add-student">
+    <div class="modal-container glass">
+      <div class="modal-header">
+        <h3>Add Student to Class Roster</h3>
+        <button class="modal-close" id="btn-close-student-modal">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+        </button>
+      </div>
+      <form id="form-add-student">
+        <div class="form-group">
+          <label class="form-label">Student Name</label>
+          <input type="text" class="form-control" id="student-name-input" placeholder="e.g. Prajwal K" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Roll Number / USN</label>
+          <input type="text" class="form-control" id="student-roll-input" placeholder="e.g. 2GB20CS001" required>
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="btn btn-secondary" id="btn-cancel-student">Cancel</button>
+          <button type="submit" class="btn btn-primary">Add Student</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ============================================== -->
+  <!-- CSV ROSTER IMPORT MODAL                        -->
+  <!-- ============================================== -->
+  <div class="modal-overlay" id="modal-csv-import">
+    <div class="modal-container glass">
+      <div class="modal-header">
+        <h3>Batch Import Student Roster (CSV)</h3>
+        <button class="modal-close" id="btn-close-csv">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+        </button>
+      </div>
+      <form id="form-csv-import">
+        <div class="form-group">
+          <label class="form-label">Select CSV File</label>
+          <div class="file-upload-input" style="padding: 2rem;">
+            <input type="file" id="csv-file-input" accept=".csv" required>
+            <p class="stat-desc" style="margin-top: 0.5rem; font-size: 0.75rem;">CSV columns should be: <strong>roll_number, name</strong> (e.g. <code>2GB20CS001, Prajwal K</code>)</p>
+          </div>
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="btn btn-secondary" id="btn-cancel-csv">Cancel</button>
+          <button type="submit" class="btn btn-primary">Parse & Import Roster</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ============================================== -->
+  <!-- RESET PASSWORD MODAL                           -->
+  <!-- ============================================== -->
+  <div class="modal-overlay" id="modal-reset-password">
+    <div class="modal-container glass">
+      <div class="modal-header">
+        <h3>Reset Password via OTP</h3>
+        <button class="modal-close" id="btn-close-reset-modal">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+        </button>
+      </div>
+      <form id="form-reset-password">
+        <div class="form-group">
+          <label class="form-label">USN or Registered Email</label>
+          <div style="display: flex; gap: 0.5rem;">
+            <input type="text" class="form-control" id="reset-identifier" placeholder="e.g. prajwal@sgbit.edu.in" style="flex-grow: 1;" required>
+            <button type="button" class="btn btn-secondary btn-sm" id="btn-send-reset-otp" style="white-space: nowrap;">Send OTP</button>
+          </div>
+          <span class="form-help-text" id="reset-otp-status-lbl">Request a 6-digit verification code.</span>
+        </div>
+        <div class="form-group" id="reset-otp-input-group" style="display: none;">
+          <label class="form-label">Enter 6-Digit OTP</label>
+          <input type="text" class="form-control" id="reset-otp-code" placeholder="123456" maxlength="6">
+        </div>
+        <div class="form-group" id="reset-new-password-group" style="display: none;">
+          <label class="form-label">Create New Password</label>
+          <input type="password" class="form-control" id="reset-new-password" placeholder="Min 6 characters">
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="btn btn-secondary" id="btn-cancel-reset">Cancel</button>
+          <button type="submit" class="btn btn-primary" id="btn-submit-reset" disabled>Update Password</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Toast Wrapper -->
+  <div class="toast-container" id="toast-wrapper"></div>
+
+  <script src="app.js"></script>
+</body>
+</html>
