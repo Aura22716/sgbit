@@ -930,11 +930,15 @@ app.post('/api/students/import-csv', authenticateToken, async (req, res) => {
 async function start() {
   await initMailer();
   await initDatabases();
-  app.listen(PORT, () => {
-    console.log(`=======================================================`);
-    console.log(`🎓 SGBIT Unified Cloud ERP active: http://localhost:${PORT}`);
-    console.log(`=======================================================`);
-  });
+  if (process.env.NODE_ENV !== 'production') {
+    app.listen(PORT, () => {
+      console.log(`=======================================================`);
+      console.log(`🎓 SGBIT Unified Cloud ERP active: http://localhost:${PORT}`);
+      console.log(`=======================================================`);
+    });
+  }
 }
 
 start();
+
+module.exports = app;
